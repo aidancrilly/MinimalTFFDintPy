@@ -38,7 +38,7 @@ def _fukushima_fdi_m0p5_region_8(x):
     t = 1600.0 * w
     return jnp.sqrt(x) * factor * (1.0 - w * (0.411233516712009968 + t * (0.00110980410034088951 + t * (0.0000113689298990173683 + t * (2.56931790679436797e-7 + t * (9.97897786755446178e-9 + t * 8.67667698791108582e-10))))))
 
-def FD_minus_half(x):
+def fermi_dirac_integral_minus_half(x):
     x1 = -2.0
     x2 = 0.0
     x3 = 2.0
@@ -46,46 +46,6 @@ def FD_minus_half(x):
     x5 = 10.0
     x6 = 20.0
     x7 = 40.0
-
-    # The Fortran code uses a series of if/else if statements.
-    # jax.lax.select is not ideal for this, as it only supports one condition.
-    # Instead, we can use a series of where clauses, which is equivalent to
-    # a series of if/else if statements.
-    
-    # An alternative is to use jax.lax.switch, but that requires integer indices.
-    # We can create these indices from the conditions.
-    
-    index = jnp.sum(jnp.array([
-        x < x1,
-        x >= x1 and x < x2,
-        x >= x2 and x < x3,
-        x >= x3 and x < x4,
-        x >= x4 and x < x5,
-        x >= x5 and x < x6,
-        x >= x6 and x < x7,
-    ]))
-    
-    # The last condition is x >= x7, which is the default case.
-    # The branches are indexed from 0 to 7.
-    
-    branches = [
-        _fukushima_fdi_m0p5_region_1,
-        _fukushima_fdi_m0p5_region_2,
-        _fukushima_fdi_m0p5_region_3,
-        _fukushima_fdi_m0p5_region_4,
-        _fukushima_fdi_m0p5_region_5,
-        _fukushima_fdi_m0p5_region_6,
-        _fukushima_fdi_m0p5_region_7,
-        _fukushima_fdi_m0p5_region_8,
-    ]
-    
-    # We need to handle the case where x is an array.
-    # We can use jax.lax.switch for this.
-    
-    # The problem is that the conditions are not mutually exclusive for arrays.
-    # For example, if x = [-3, 1], then the first element is < x1 and the second is >= x2 and < x3.
-    
-    # A better way is to use jnp.select.
     
     conditions = [
         x < x1,
@@ -186,7 +146,7 @@ def _fukushima_fdi_p0p5_region_8(x):
     return x * jnp.sqrt(x) * factor * (1.0 + w * (8109.79390744477921 + s * (342.069867454704106 + s * 1.07141702293504595)) / (6569.98472532829094 + s * (280.7064658516838090 + s)))
 
 def fermi_dirac_integral_half_fwd(x):
-    return fermi_dirac_integral_half(x), FD_minus_half(x)
+    return fermi_dirac_integral_half(x), fermi_dirac_integral_minus_half(x)
 
 def FD_half_bwd(res, g):
     return (res * g,)
