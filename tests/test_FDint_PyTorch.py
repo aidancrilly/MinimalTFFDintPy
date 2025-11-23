@@ -14,8 +14,8 @@ def test_fermi_dirac_integrals():
     fd1h = fermi_dirac_integral_half(x)
     fd3h = fermi_dirac_integral_three_half(x)
 
-    np.testing.assert_allclose(fd1h, fd1h_ref, rtol=1e-5, atol=1e-8)
-    np.testing.assert_allclose(fd3h, fd3h_ref, rtol=1e-5, atol=1e-8)
+    np.testing.assert_allclose(fd1h, fd1h_ref, rtol=1e-5)
+    np.testing.assert_allclose(fd3h, fd3h_ref, rtol=1e-5)
 
     x.requires_grad_(True)
     y1 = fermi_dirac_integral_half(x)
@@ -27,5 +27,5 @@ def test_fermi_dirac_integrals():
     AD_fd1h = x.grad.clone()
     x.requires_grad_(False)
 
-    np.testing.assert_allclose(AD_fdm1h, fdm1h, rtol=1e-5, atol=1e-8)
-    np.testing.assert_allclose(AD_fd1h, fd1h, rtol=1e-5, atol=1e-8)
+    np.testing.assert_allclose(AD_fdm1h, fdm1h, rtol=1e-5)
+    np.testing.assert_allclose(AD_fd1h, fd1h, rtol=1e-5)
