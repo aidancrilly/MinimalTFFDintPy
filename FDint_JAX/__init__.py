@@ -88,6 +88,46 @@ fermi_dirac_integral_three_half.defvjp(
     fermi_dirac_integral_three_half_fwd, FD_three_halfs_bwd
 )
 
+# JVPs
 
+def inverse_fd_half_jvp(primals, tangents):
+    x, = primals
+    x_dot, = tangents
+    
+    y = _inverse_fdi_half_impl(x)
+    
+    gradient_at_y = fermi_dirac_integral_minus_half(y)
+    
+    y_dot = x_dot / gradient_at_y
+    
+    return y, y_dot
 
+inverse_fermi_dirac_integral_half.defjvp(inverse_fd_half_jvp)
 
+def fermi_dirac_integral_half_jvp(primals, tangents):
+    x, = primals
+    x_dot, = tangents
+    
+    y = _fermi_dirac_integral_half_impl(x)
+    
+    gradient = fermi_dirac_integral_minus_half(x)
+
+    y_dot = gradient * x_dot
+    
+    return y, y_dot
+
+fermi_dirac_integral_half.defjvp(fermi_dirac_integral_half_jvp)
+
+def fermi_dirac_integral_three_half_jvp(primals, tangents):
+    x, = primals
+    x_dot, = tangents
+
+    y = _fermi_dirac_integral_three_half_impl(x)
+
+    gradient = fermi_dirac_integral_half(x)
+
+    y_dot = gradient * x_dot
+    
+    return y, y_dot
+
+fermi_dirac_integral_three_half.defjvp(fermi_dirac_integral_three_half_jvp)
