@@ -3,7 +3,7 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "minimal-tffdint"
+name = "minimaltffdintpy"
 version = "0.1.0"
 description = "Fukushima-style Fermi-Dirac integral approximations for JAX and PyTorch"
 requires-python = ">=3.9"
