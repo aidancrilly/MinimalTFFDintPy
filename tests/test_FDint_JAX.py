@@ -35,4 +35,18 @@ def test_fermi_dirac_integrals():
     np.testing.assert_allclose(
         AD_ifd1h, 1.0 / fermi_dirac_integral_minus_half(ifd1h), rtol=1e-5
     )
-    
+
+
+def test_fermi_dirac_integrals_negative_x():
+    x_ref, fd1h_ref, fd3h_ref = np.loadtxt(
+        "tests/FDINT_negative_x_values.csv", unpack=True, delimiter=","
+    )
+
+    x = jnp.asarray(x_ref)
+
+    fd1h = fermi_dirac_integral_half(x)
+    fd3h = fermi_dirac_integral_three_half(x)
+
+    np.testing.assert_allclose(fd1h, fd1h_ref, rtol=1e-5)
+    np.testing.assert_allclose(fd3h, fd3h_ref, rtol=1e-5)
+
