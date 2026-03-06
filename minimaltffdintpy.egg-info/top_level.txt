@@ -1,3 +1,0 @@
-FDint_JAX
-FDint_PyTorch
-fdint_core
