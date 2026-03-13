@@ -35,7 +35,7 @@ _fermi_dirac_integral_half_impl = build_fermi_dirac_integral_half(_JAX_BACKEND)
 _fermi_dirac_integral_three_half_impl = build_fermi_dirac_integral_three_half(_JAX_BACKEND)
 _inverse_fdi_half_impl = build_inverse_fermi_dirac_integral_half(_JAX_BACKEND)
 
-_VJP_VERSION = True
+_VJP_VERSION = False
 
 # VJP version
 if _VJP_VERSION:
