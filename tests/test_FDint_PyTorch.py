@@ -51,3 +51,24 @@ def test_fermi_dirac_integrals():
     np.testing.assert_allclose(
         AD_ifd1h.detach().numpy(), expected_grad.detach().numpy(), rtol=1e-5
     )
+
+
+def test_fermi_dirac_integrals_negative_x():
+    # The main reference grid is positive-only, which previously hid wrong
+    # coefficients in the x < 0 regions of F_{-1/2}. This locks in negative-x
+    # accuracy against high-precision mpmath values.
+    x_ref, fdm1h_ref, fd1h_ref, fd3h_ref = np.loadtxt(
+        "tests/FDINT_negative_values.csv", unpack=True, delimiter=","
+    )
+
+    x = torch.tensor(x_ref)
+
+    np.testing.assert_allclose(
+        fermi_dirac_integral_minus_half(x).detach().numpy(), fdm1h_ref, rtol=1e-5
+    )
+    np.testing.assert_allclose(
+        fermi_dirac_integral_half(x).detach().numpy(), fd1h_ref, rtol=1e-5
+    )
+    np.testing.assert_allclose(
+        fermi_dirac_integral_three_half(x).detach().numpy(), fd3h_ref, rtol=1e-5
+    )
